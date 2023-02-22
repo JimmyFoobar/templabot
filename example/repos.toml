@@ -1,0 +1,6 @@
+[[entries]]
+template = "example/template1"
+
+repos =  [
+    "https://github.com/JimmyFoobar/templabot",
+]
