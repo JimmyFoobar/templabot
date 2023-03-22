@@ -11,7 +11,6 @@ use std::{
     path::{Path, PathBuf},
 };
 
-
 pub mod utils;
 
 // Top level struct to hold the TOML data.
