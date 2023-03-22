@@ -3,7 +3,7 @@ use git2::{Direction, Repository};
 fn add_all(repo: &git2::Repository) {
     let mut index = repo.index().unwrap();
     index
-        .add_all(&["."], git2::IndexAddOption::DEFAULT, None)
+        .add_all(["."], git2::IndexAddOption::DEFAULT, None)
         .unwrap();
     index.write().unwrap();
 }

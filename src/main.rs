@@ -8,10 +8,9 @@ use regex::Regex;
 use serde_derive::Deserialize;
 use std::{
     fs::{self, create_dir_all},
-    io,
     path::{Path, PathBuf},
 };
-use toml;
+
 
 pub mod utils;
 
@@ -51,7 +50,7 @@ fn main() {
 
     //prepare compare options
     let regex = Regex::new(r"\.git$").unwrap();
-    let filter = Filter::Exclude(vec![regex]);
+    let _filter = Filter::Exclude(vec![regex]);
 
     /* let diff_options = Options {
         ignore_left_only: false,
@@ -82,7 +81,7 @@ fn process_single_repo(git_url: &str, template_path: &Path, repo_builder: &mut R
         .expect("creating temp dir");
     info!("cloning repo: {} to {:?}", git_url, temp_repo_dir.path());
 
-    let repo = match repo_builder.clone(&git_url, temp_repo_dir.path()) {
+    let repo = match repo_builder.clone(git_url, temp_repo_dir.path()) {
         Ok(repo) => repo,
         Err(e) => panic!("failed to clone: {}", e),
     };
@@ -107,7 +106,7 @@ fn add_changed_files_from_template(template_path: &Path, repo_path: &Path) {
         recursive: true,
     };
 
-    let compare_results = compare_dirs(template_path, repo_path, diff_options.clone()).unwrap();
+    let compare_results = compare_dirs(template_path, repo_path, diff_options).unwrap();
     info!("compare_result: {:?}", compare_results);
 
     for dir_cmp_entry in compare_results {
@@ -154,7 +153,7 @@ fn copy_with_parents(file: &Path, base_dir: &Path, target_dir: &Path) -> PathBuf
     let file_relatetive_to_base_dir = file.strip_prefix(base_dir).unwrap();
 
     let new_file = target_dir.join(file_relatetive_to_base_dir);
-    _ = create_dir_all(new_file.parent().unwrap()).unwrap();
+    create_dir_all(new_file.parent().unwrap()).unwrap();
     _ = fs::copy(file, &new_file).unwrap();
     new_file
 }
@@ -212,7 +211,7 @@ mod tests_add_pat {
     #[test]
     fn foo() {
         assert_eq!(
-            add_pat("https://github.com/foo/bar".to_string(), &"pat".to_string()),
+            add_pat("https://github.com/foo/bar".to_string(), "pat"),
             "https://pat:@github.com/foo/bar"
         );
     }
